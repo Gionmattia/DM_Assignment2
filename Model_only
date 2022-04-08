@@ -1,0 +1,34 @@
+import pandas as pd
+import numpy as np
+from sklearn import metrics
+from sklearn import model_selection
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import MinMaxScaler
+
+# Load the training set
+
+df = pd.read_csv("https://github.com/andvise/DataAnalyticsDatasets/blob/6d5738101d173b97c565f143f945dedb9c42a400/dm_assignment2/sat_dataset_train.csv?raw=true")
+
+# Preprocess the training set (remove NaN and inf values)
+
+df.replace([np.inf, -np.inf], np.nan, inplace=True)
+
+df = df.dropna(axis = 1, thresh=1000)
+df = df.fillna(0)
+
+# Divide features and labels
+
+features = df.loc[:,"c":"rwh_2_max"]
+labels = df["target"]
+
+# Create the train and test items and labels (nb. we will not use these test items/labels though)
+
+train_items, test_items, train_labels, test_labels = model_selection.train_test_split(features, labels, test_size = 0.3, random_state = 720)
+
+# Create the Random Forest Classifier
+
+jungle = RandomForestClassifier(n_estimators=100)
+
+# Train the model
+
+jungle.fit(train_items,train_labels)
